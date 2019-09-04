@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.jr.ob.JSON;
 import com.yasenagat.zkweb.model.Tree;
 import com.yasenagat.zkweb.model.TreeRoot;
 import com.yasenagat.zkweb.util.ZkCache;
@@ -35,7 +35,7 @@ public class ZkController implements DisposableBean{
 	public String queryzNodeInfo(
 			@RequestParam(required=false) String path,
 			Model model,
-			@RequestParam(required=true) String cacheId
+			@RequestParam String cacheId
 			){
 		
 		try {
@@ -68,7 +68,7 @@ public class ZkController implements DisposableBean{
 		return "info";
 	}
 	@RequestMapping(value="/queryZKOk")
-	public @ResponseBody String queryZKOk(Model model,@RequestParam(required=true) String cacheId){
+	public @ResponseBody String queryZKOk(Model model,@RequestParam String cacheId){
 		String exmsg="<font color='red'>Disconnected Or Exception</font>";
 		try {
 			if(ZkCache.get(cacheId)!=null&&ZkCache.get(cacheId).getData("/",false)!=null) {
@@ -89,8 +89,8 @@ public class ZkController implements DisposableBean{
 	}
 	@RequestMapping(value="/queryZKJMXInfo", produces="application/json;charset=UTF-8")
 	public @ResponseBody List<PropertyPanel> queryZKJMXInfo(
-			@RequestParam(required=true) String simpleFlag,
-			@RequestParam(required=true) String cacheId,HttpServletResponse response
+			@RequestParam String simpleFlag,
+			@RequestParam String cacheId,HttpServletResponse response
 			){
 		
 		try {
@@ -99,7 +99,7 @@ public class ZkController implements DisposableBean{
 //			//model.addAttribute("path",path);
 //			model.addAttribute("cacheId", cacheId);
 			List<PropertyPanel> result=ZkCache.get(cacheId).getJMXInfo(Integer.parseInt(simpleFlag)==0?false:true);
-			log.info("queryZKJMXInfo simpleFlag={},cacheId={},result : {}",simpleFlag,cacheId,JSON.std.asString(result));
+			log.info("queryZKJMXInfo simpleFlag={},cacheId={},result : {}",simpleFlag,cacheId, JSON.toJSONString(result));
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			return result;
 		} catch (Exception e) {
@@ -113,7 +113,7 @@ public class ZkController implements DisposableBean{
 	public @ResponseBody List<Tree> query(
 			@RequestParam(required=false) String id,
 			@RequestParam(required=false) String path,
-			@RequestParam(required=true) String cacheId
+			@RequestParam String cacheId
 			){
 		
 		log.info("id : {}",id);
@@ -162,7 +162,7 @@ public class ZkController implements DisposableBean{
 	public @ResponseBody String saveData(
 			@RequestParam() String path,
 			@RequestParam() String data,
-			@RequestParam(required=true) String cacheId
+			@RequestParam String cacheId
 			){
 		
 		try {
@@ -180,7 +180,7 @@ public class ZkController implements DisposableBean{
 	public @ResponseBody String createNode(
 			@RequestParam() String path,
 			@RequestParam() String nodeName,
-			@RequestParam(required=true) String cacheId
+			@RequestParam String cacheId
 			){
 		
 		try {
@@ -198,7 +198,7 @@ public class ZkController implements DisposableBean{
 	@RequestMapping(value="/deleteNode",produces="text/html;charset=UTF-8")
 	public @ResponseBody String deleteNode(
 			@RequestParam() String path,
-			@RequestParam(required=true) String cacheId
+			@RequestParam String cacheId
 			){
 		
 		try {

@@ -89,7 +89,7 @@ public class ZkCfgController{
 	
 	@RequestMapping(value="/updateZkCfg",produces="text/html;charset=UTF-8")
 	public @ResponseBody String updateZkCfg(
-			@RequestParam(required=true) String id,
+			@RequestParam String id,
 			@RequestParam(required=false) String desc,
 			@RequestParam(required=false) String connectstr,
 			@RequestParam(required=false) String sessiontimeout){
@@ -117,7 +117,7 @@ public class ZkCfgController{
 	
 	@RequestMapping(value="/delZkCfg",produces="text/html;charset=UTF-8")
 	public @ResponseBody String delZkCfg(
-			@RequestParam(required=true) String id){
+			@RequestParam String id){
 		
 		try {
 			ZkCfgFactory.createZkCfgManager().delete(id);
